@@ -258,7 +258,7 @@ export default function ProjectList() {
             <MCButton
               className="flex-1 whitespace-nowrap"
               disabled={!selectedId}
-              title={selectedId ? `Re-Create: ${projects.find((p) => p.id === selectedId)?.title}` : 'Select a project first'}
+              title={selectedId ? `Re-create: ${projects.find((p) => p.id === selectedId)?.title}` : 'Select a project first'}
               onClick={handleRecreate}
             >
               Re-create

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { useUIStore } from '../../stores/uiStore';
 
 interface Props {
   faces: [string, string, string, string, string, string];
@@ -7,6 +8,9 @@ interface Props {
 
 export default function PanoramaBackground({ faces }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useUIStore((s) => s.reduceMotion);
+  const reduceMotionRef = useRef(reduceMotion);
+  reduceMotionRef.current = reduceMotion;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -43,7 +47,9 @@ export default function PanoramaBackground({ faces }: Props) {
     let id: number;
     const loop = () => {
       id = requestAnimationFrame(loop);
-      camera.rotation.y += 0.0005;
+      if (!reduceMotionRef.current) {
+        camera.rotation.y += 0.0005;
+      }
       renderer.render(scene, camera);
     };
     id = requestAnimationFrame(loop);

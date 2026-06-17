@@ -10,7 +10,7 @@ const MCButton = React.forwardRef<HTMLButtonElement, MCButtonProps>(
     return (
       <button
         ref={ref}
-        className={`mc-button-bg font-minecraft text-[1rem] leading-none font-semibold tracking-wide text-[#f0f0f0] disabled:text-[#aaaaaa] text-center px-5 pt-[0px] pb-[8px] cursor-pointer outline-none mc-text-shadow ${className}`}
+        className={`mc-button-bg font-minecraft text-[1rem] leading-none font-semibold tracking-wide text-[#f0f0f0] disabled:text-[#aaaaaa] text-center px-5 pt-[0px] pb-[8px] cursor-pointer outline-none mc-text-shadow whitespace-nowrap ${className}`}
         onClick={(e) => {
           playClick();
           onClick?.(e);
