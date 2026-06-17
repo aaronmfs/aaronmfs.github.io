@@ -6,6 +6,7 @@ import Contacts from './pages/Contacts';
 import AboutMe from './pages/AboutMe';
 import PanoramaBackground from './components/background/PanoramaBackground';
 import LoadingScreen from './components/ui/LoadingScreen';
+import IncompatibleScreen from './components/ui/IncompatibleScreen';
 import panorama0 from './assets/images/panorama/panorama_0.png';
 import panorama1 from './assets/images/panorama/panorama_1.png';
 import panorama2 from './assets/images/panorama/panorama_2.png';
@@ -25,12 +26,20 @@ const screens: Record<string, React.FC> = {
 };
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
   const [loading, setLoading] = useState(true);
   const screen = useUIStore((s) => s.screen);
   const Screen = screens[screen] ?? MainMenu;
   const reduceMotion = useUIStore((s) => s.reduceMotion);
   const largeFont = useUIStore((s) => s.largeFont);
   const highContrast = useUIStore((s) => s.highContrast);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
   // Fade overlay: only triggers on loading→main-menu transition, not on screen navigation
   const [fadeStage, setFadeStage] = useState<'hidden' | 'show' | 'fade'>('hidden');
@@ -57,21 +66,27 @@ export default function App() {
 
   return (
     <>
-      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      {isMobile ? (
+        <IncompatibleScreen />
+      ) : (
+        <>
+          {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
 
-      {fadeStage !== 'hidden' && (
-        <div
-          className="fixed inset-0 z-[100] bg-black pointer-events-none"
-          style={{
-            opacity: fadeStage === 'fade' ? 0 : 1,
-            transition: fadeStage === 'fade' ? `opacity ${reduceMotion ? 0 : 800}ms ease-out` : 'none',
-          }}
-          onTransitionEnd={() => setFadeStage('hidden')}
-        />
+          {fadeStage !== 'hidden' && (
+            <div
+              className="fixed inset-0 z-[100] bg-black pointer-events-none"
+              style={{
+                opacity: fadeStage === 'fade' ? 0 : 1,
+                transition: fadeStage === 'fade' ? `opacity ${reduceMotion ? 0 : 800}ms ease-out` : 'none',
+              }}
+              onTransitionEnd={() => setFadeStage('hidden')}
+            />
+          )}
+
+          <PanoramaBackground faces={panoramaFaces} />
+          <Screen />
+        </>
       )}
-
-      <PanoramaBackground faces={panoramaFaces} />
-      <Screen />
     </>
   );
 }
