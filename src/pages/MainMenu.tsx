@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import portfolioLogo from '../assets/images/portfolio_title.png';
 import accessibilityIcon from '../assets/images/accessibility.png';
-import languageIcon from '../assets/images/language.png';
+import accountIcon from '../assets/images/account.png';
 import { useUIStore } from '../stores/uiStore';
 import MCButton from '../components/ui/MCButton';
 import MCSplash from '../components/ui/MCSplash';
@@ -103,7 +103,7 @@ export default function MainMenu() {
               title="Account"
               onClick={() => { playClick(); setShowAccount(true); }}
             >
-              <img src={languageIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
+              <img src={accountIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
             </button>
             <div className="w-[518px] max-w-[85vw] flex gap-1.5">
               <MCButton className="flex-1" onClick={openOptions}>
