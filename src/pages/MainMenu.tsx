@@ -4,6 +4,7 @@ import accessibilityIcon from '../assets/images/accessibility.png';
 import languageIcon from '../assets/images/language.png';
 import { useUIStore } from '../stores/uiStore';
 import MCButton from '../components/ui/MCButton';
+import MCSplash from '../components/ui/MCSplash';
 import { playClick } from '../lib/sound';
 
 export default function MainMenu() {
@@ -33,13 +34,14 @@ export default function MainMenu() {
     <>
       <div className="fixed inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
         <div className="w-[518px] max-w-[85vw] pointer-events-auto flex flex-col items-center mb-6">
-          <div className="mb-[8vh] -translate-y-10 flex justify-center">
+          <div className="mb-[8vh] -translate-y-10 relative flex justify-center">
             <img
               src={portfolioLogo}
               alt="Portfolio"
               className="max-w-full h-auto scale-[1.8] block"
               draggable={false}
             />
+            <MCSplash />
           </div>
 
           <div className="w-full flex flex-col gap-[13px]">

@@ -122,8 +122,21 @@
   }
 }
 
+@keyframes splash-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animate-splash-breathe {
+  animation: splash-breathe 2s ease-in-out infinite;
+}
+
 .reduce-motion .animate-scroll,
 .reduce-motion .animate-scroll-reverse {
+  animation: none !important;
+}
+
+.reduce-motion .animate-splash-breathe {
   animation: none !important;
 }
 
