@@ -103,7 +103,7 @@ export default function MainMenu() {
               title="Account"
               onClick={() => { playClick(); setShowAccount(true); }}
             >
-              <img src={accountIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
+              <img src={accountIcon} alt="" className="w-[33px] h-[33px]" draggable={false} />
             </button>
             <div className="w-[518px] max-w-[85vw] flex gap-1.5">
               <MCButton className="flex-1" onClick={openOptions}>
