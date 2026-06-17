@@ -145,7 +145,7 @@ export default function MainMenu() {
                   <p>Version 1.0.0</p>
                   <p>Built with React, TypeScript, Tailwind CSS, Zustand</p>
                   <p className="mt-1">Minecraft UI theme inspired by the 1.14+ texture pack.</p>
-                  <p className="mt-1">Button, icon, and panel assets by the creator.</p>
+                  <p className="mt-1">Button, icon, and panel assets by the creator (some textures taken from Minecraft).</p>
                 </div>
               </div>
 
