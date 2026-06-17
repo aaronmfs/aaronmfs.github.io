@@ -64,7 +64,7 @@ export default function App() {
           className="fixed inset-0 z-[100] bg-black pointer-events-none"
           style={{
             opacity: fadeStage === 'fade' ? 0 : 1,
-            transition: fadeStage === 'fade' ? `opacity ${reduceMotion ? 0 : 800}ms ease` : 'none',
+            transition: fadeStage === 'fade' ? `opacity ${reduceMotion ? 0 : 800}ms ease-out` : 'none',
           }}
           onTransitionEnd={() => setFadeStage('hidden')}
         />
