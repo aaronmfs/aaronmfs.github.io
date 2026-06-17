@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useUIStore } from './stores/uiStore';
 import MainMenu from './pages/MainMenu';
 import ProjectList from './pages/ProjectList';
 import Contacts from './pages/Contacts';
 import AboutMe from './pages/AboutMe';
 import PanoramaBackground from './components/background/PanoramaBackground';
+import LoadingScreen from './components/ui/LoadingScreen';
 import panorama0 from './assets/images/panorama/panorama_0.png';
 import panorama1 from './assets/images/panorama/panorama_1.png';
 import panorama2 from './assets/images/panorama/panorama_2.png';
@@ -24,6 +25,7 @@ const screens: Record<string, React.FC> = {
 };
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
   const screen = useUIStore((s) => s.screen);
   const Screen = screens[screen] ?? MainMenu;
   const reduceMotion = useUIStore((s) => s.reduceMotion);
@@ -39,6 +41,7 @@ export default function App() {
 
   return (
     <>
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       <PanoramaBackground faces={panoramaFaces} />
       <Screen />
     </>
