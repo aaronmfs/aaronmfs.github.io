@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import portfolioLogo from '../assets/images/portfolio_title.png';
 import accessibilityIcon from '../assets/images/accessibility.png';
+import languageIcon from '../assets/images/language.png';
 import { useUIStore } from '../stores/uiStore';
 import MCButton from '../components/ui/MCButton';
 import MCSplash from '../components/ui/MCSplash';
@@ -102,10 +103,7 @@ export default function MainMenu() {
               title="Account"
               onClick={() => { playClick(); setShowAccount(true); }}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[30px] h-[30px]">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
+              <img src={languageIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
             </button>
             <div className="w-[518px] max-w-[85vw] flex gap-1.5">
               <MCButton className="flex-1" onClick={openOptions}>
@@ -188,12 +186,6 @@ export default function MainMenu() {
                   <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Username</span>
                   <div className="text-sm text-[#e0e0e0] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
                     {loggedInUser.username}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Role</span>
-                  <div className="text-sm text-[#e0e0e0] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
-                    {loggedInUser.role}
                   </div>
                 </div>
                 <MCButton onClick={() => { handleLogout(); setShowAccount(false); }}>
