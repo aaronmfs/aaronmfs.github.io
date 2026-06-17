@@ -14,12 +14,13 @@ The project needs to be **HTML, CSS, and JS** — and it is. React/TypeScript/Vi
 
 ## Features
 
-- **Rotating 3D panorama** — 6-face cube map rendered with Three.js, slowly rotating like the real Minecraft menu
+- **Rotating 3D panorama** — 6-face cube map rendered with Three.js, slowly rotating like the real Minecraft menu; rotation pauses when reduce motion is enabled
 - **Minecraft-styled UI** — pixel-art border-image buttons, custom pixel font, dirty background, text shadows
+- **Splash text** — random yellow tip text near the title with a pulsing animation, just like the real Minecraft menu
 - **Project portfolio CRUD** — create, read, update, delete, and duplicate projects (data resets on reload)
 - **Contacts page** — list of contact methods with icons
 - **About Me** — Markdown bio with scrolling skill marquees
-- **Accessibility** — reduce motion, large font, and high contrast toggles
+- **Accessibility** — reduce motion, large font, and high contrast toggles; reduce motion freezes the panorama and stops all animations
 - **Keyboard navigation** — arrow keys through lists, escape to clear search
 - **Sound effects** — click.ogg plays on every button press
 
