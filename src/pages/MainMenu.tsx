@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import portfolioLogo from '../assets/images/portfolio_title.png';
 import accessibilityIcon from '../assets/images/accessibility.png';
-import languageIcon from '../assets/images/language.png';
 import { useUIStore } from '../stores/uiStore';
 import MCButton from '../components/ui/MCButton';
 import MCSplash from '../components/ui/MCSplash';
@@ -22,6 +21,7 @@ export default function MainMenu() {
 
   const [showOptions, setShowOptions] = useState(false);
   const [showAccessibility, setShowAccessibility] = useState(false);
+  const [showAccount, setShowAccount] = useState(false);
   const [showLogin, setShowLogin] = useState(!loggedInUser);
 
   const [loginUsername, setLoginUsername] = useState('');
@@ -49,7 +49,6 @@ export default function MainMenu() {
   const handleLogout = useCallback(() => {
     setLoggedInUser(null);
     setShowLogin(true);
-    setShowOptions(false);
   }, [setLoggedInUser]);
 
   const handleResetProjects = useCallback(() => {
@@ -100,10 +99,13 @@ export default function MainMenu() {
           <div className="flex items-center justify-center gap-1.5 pointer-events-auto">
             <button
               className="mc-button-bg w-[60px] flex-none relative cursor-pointer flex items-center justify-center"
-              title="Language"
-              onClick={playClick}
+              title="Account"
+              onClick={() => { playClick(); setShowAccount(true); }}
             >
-              <img src={languageIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
+              <svg viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[30px] h-[30px]">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
             </button>
             <div className="w-[518px] max-w-[85vw] flex gap-1.5">
               <MCButton className="flex-1" onClick={openOptions}>
@@ -156,21 +158,61 @@ export default function MainMenu() {
                 </MCButton>
               </div>
 
-              {loggedInUser && (
-                <div className="flex flex-col gap-1">
-                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Account</span>
-                  <div className="text-sm text-[#cccccc] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
-                    Logged in as <span className="text-white">{loggedInUser.username}</span>
-                  </div>
-                  <MCButton onClick={handleLogout}>
-                    Log Out
-                  </MCButton>
-                </div>
-              )}
             </div>
 
             <div className="flex gap-1.5 w-full mt-2">
               <MCButton className="flex-1" onClick={closeOptions}>
+                Done
+              </MCButton>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAccount && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 pointer-events-auto">
+          <div className="w-[26.25rem] max-w-[92vw] bg-[#1a1a1c] border-2 border-[#3a3a3a] rounded-sm p-6 flex flex-col gap-4">
+            <h2 className="font-minecraft text-[1.25rem] font-bold tracking-wider text-[#e0e0e0] mc-text-shadow text-center whitespace-nowrap">
+              Account
+            </h2>
+
+            {loggedInUser ? (
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Name</span>
+                  <div className="text-sm text-[#e0e0e0] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
+                    {loggedInUser.fullName}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Username</span>
+                  <div className="text-sm text-[#e0e0e0] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
+                    {loggedInUser.username}
+                  </div>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Role</span>
+                  <div className="text-sm text-[#e0e0e0] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
+                    {loggedInUser.role}
+                  </div>
+                </div>
+                <MCButton onClick={() => { handleLogout(); setShowAccount(false); }}>
+                  Log Out
+                </MCButton>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-relaxed text-center">
+                  Not logged in
+                </p>
+                <MCButton onClick={() => { setShowAccount(false); setShowLogin(true); }}>
+                  Login
+                </MCButton>
+              </div>
+            )}
+
+            <div className="flex gap-1.5 w-full mt-2">
+              <MCButton className="flex-1" onClick={() => setShowAccount(false)}>
                 Done
               </MCButton>
             </div>
