@@ -11,6 +11,12 @@ export default function PanoramaBackground({ faces }: Props) {
   const reduceMotion = useUIStore((s) => s.reduceMotion);
   const reduceMotionRef = useRef(reduceMotion);
   reduceMotionRef.current = reduceMotion;
+  const loggedInUser = useUIStore((s) => s.loggedInUser);
+  const loggedInRef = useRef(!!loggedInUser);
+  loggedInRef.current = !!loggedInUser;
+  const screen = useUIStore((s) => s.screen);
+  const screenRef = useRef(screen);
+  screenRef.current = screen;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -37,6 +43,17 @@ export default function PanoramaBackground({ faces }: Props) {
     texture.magFilter = THREE.NearestFilter;
     scene.background = texture;
 
+    const blurRef = { current: 0 };
+
+    // Set initial zoom/blur — only blur on MainMenu when logged out
+    const initialBlur = !loggedInRef.current && screenRef.current === 'MAIN_MENU';
+    if (initialBlur) {
+      camera.zoom = 1.1;
+      camera.updateProjectionMatrix();
+      blurRef.current = 6;
+      container.style.filter = 'blur(6px)';
+    }
+
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -47,6 +64,18 @@ export default function PanoramaBackground({ faces }: Props) {
     let id: number;
     const loop = () => {
       id = requestAnimationFrame(loop);
+
+      const shouldBlur = !loggedInRef.current && screenRef.current === 'MAIN_MENU';
+      const targetZoom = shouldBlur ? 1.1 : 1.0;
+      const targetBlur = shouldBlur ? 6 : 0;
+      const speed = reduceMotionRef.current ? 1 : 0.03;
+
+      camera.zoom += (targetZoom - camera.zoom) * speed;
+      camera.updateProjectionMatrix();
+
+      blurRef.current += (targetBlur - blurRef.current) * speed;
+      container.style.filter = `blur(${blurRef.current}px)`;
+
       if (!reduceMotionRef.current) {
         camera.rotation.y += 0.0005;
       }

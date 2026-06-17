@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useLayoutEffect } from 'react';
 import { useUIStore } from './stores/uiStore';
 import MainMenu from './pages/MainMenu';
 import ProjectList from './pages/ProjectList';
@@ -32,6 +32,22 @@ export default function App() {
   const largeFont = useUIStore((s) => s.largeFont);
   const highContrast = useUIStore((s) => s.highContrast);
 
+  // Fade overlay: only triggers on loading→main-menu transition, not on screen navigation
+  const [fadeStage, setFadeStage] = useState<'hidden' | 'show' | 'fade'>('hidden');
+
+  useEffect(() => {
+    if (!loading) {
+      setFadeStage('show');
+    }
+  }, [loading]);
+
+  useLayoutEffect(() => {
+    if (fadeStage === 'show') {
+      const raf = requestAnimationFrame(() => setFadeStage('fade'));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [fadeStage]);
+
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('reduce-motion', reduceMotion);
@@ -42,6 +58,18 @@ export default function App() {
   return (
     <>
       {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+
+      {fadeStage !== 'hidden' && (
+        <div
+          className="fixed inset-0 z-[100] bg-black pointer-events-none"
+          style={{
+            opacity: fadeStage === 'fade' ? 0 : 1,
+            transition: fadeStage === 'fade' ? `opacity ${reduceMotion ? 0 : 800}ms ease` : 'none',
+          }}
+          onTransitionEnd={() => setFadeStage('hidden')}
+        />
+      )}
+
       <PanoramaBackground faces={panoramaFaces} />
       <Screen />
     </>

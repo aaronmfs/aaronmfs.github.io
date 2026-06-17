@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { UserEntry } from '../data/users';
 
 export type Screen = 'MAIN_MENU' | 'PROJECT_LIST' | 'CONTACTS' | 'ABOUT_ME';
 
@@ -13,6 +14,8 @@ interface UIStore {
   setHighContrast: (v: boolean) => void;
   projectResetKey: number;
   triggerProjectReset: () => void;
+  loggedInUser: UserEntry | null;
+  setLoggedInUser: (user: UserEntry | null) => void;
 }
 
 export const useUIStore = create<UIStore>((set) => ({
@@ -26,4 +29,6 @@ export const useUIStore = create<UIStore>((set) => ({
   setHighContrast: (highContrast) => set({ highContrast }),
   projectResetKey: 0,
   triggerProjectReset: () => set((s) => ({ projectResetKey: s.projectResetKey + 1 })),
+  loggedInUser: null,
+  setLoggedInUser: (loggedInUser) => set({ loggedInUser }),
 }));

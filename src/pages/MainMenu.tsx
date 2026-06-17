@@ -6,6 +6,7 @@ import { useUIStore } from '../stores/uiStore';
 import MCButton from '../components/ui/MCButton';
 import MCSplash from '../components/ui/MCSplash';
 import { playClick } from '../lib/sound';
+import { USERS } from '../data/users';
 
 export default function MainMenu() {
   const setScreen = useUIStore((s) => s.setScreen);
@@ -16,14 +17,40 @@ export default function MainMenu() {
   const highContrast = useUIStore((s) => s.highContrast);
   const setHighContrast = useUIStore((s) => s.setHighContrast);
   const triggerProjectReset = useUIStore((s) => s.triggerProjectReset);
+  const loggedInUser = useUIStore((s) => s.loggedInUser);
+  const setLoggedInUser = useUIStore((s) => s.setLoggedInUser);
 
   const [showOptions, setShowOptions] = useState(false);
   const [showAccessibility, setShowAccessibility] = useState(false);
+  const [showLogin, setShowLogin] = useState(!loggedInUser);
+
+  const [loginUsername, setLoginUsername] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const openOptions = useCallback(() => setShowOptions(true), []);
   const closeOptions = useCallback(() => setShowOptions(false), []);
   const openAccessibility = useCallback(() => setShowAccessibility(true), []);
   const closeAccessibility = useCallback(() => setShowAccessibility(false), []);
+
+  const handleLogin = useCallback(() => {
+    const user = USERS.find((u) => u.username === loginUsername && u.password === loginPassword);
+    if (user) {
+      setLoggedInUser(user);
+      setShowLogin(false);
+      setLoginUsername('');
+      setLoginPassword('');
+      setLoginError('');
+    } else {
+      setLoginError('Invalid username or password');
+    }
+  }, [loginUsername, loginPassword, setLoggedInUser]);
+
+  const handleLogout = useCallback(() => {
+    setLoggedInUser(null);
+    setShowLogin(true);
+    setShowOptions(false);
+  }, [setLoggedInUser]);
 
   const handleResetProjects = useCallback(() => {
     triggerProjectReset();
@@ -32,61 +59,75 @@ export default function MainMenu() {
 
   return (
     <>
-      <div className="fixed inset-0 z-10 flex flex-col items-center justify-center pointer-events-none">
-        <div className="w-[518px] max-w-[85vw] pointer-events-auto flex flex-col items-center mb-6">
-          <div className="mb-[8vh] -translate-y-10 relative flex justify-center">
-            <img
-              src={portfolioLogo}
-              alt="Portfolio"
-              className="max-w-full h-auto scale-[1.8] block"
-              draggable={false}
-            />
-            <MCSplash />
+      <div
+        className="fixed inset-0 z-10 pointer-events-none overflow-hidden"
+        style={{
+          filter: showLogin ? 'blur(6px)' : 'blur(0px)',
+          transition: 'filter 0.6s ease',
+        }}
+      >
+        <div
+          className="relative flex flex-col items-center justify-center h-full"
+          style={{
+            transform: showLogin ? 'scale(1.1)' : 'scale(1)',
+            transition: 'transform 0.6s ease',
+          }}
+        >
+          <div className="w-[518px] max-w-[85vw] pointer-events-auto flex flex-col items-center mb-6">
+            <div className="mb-[8vh] -translate-y-10 relative flex justify-center">
+              <img
+                src={portfolioLogo}
+                alt="Portfolio"
+                className="max-w-full h-auto scale-[1.8] block"
+                draggable={false}
+              />
+              <MCSplash />
+            </div>
+
+            <div className="w-full flex flex-col gap-[13px]">
+              <MCButton onClick={() => setScreen('PROJECT_LIST')}>
+                Project List
+              </MCButton>
+              <MCButton onClick={() => setScreen('CONTACTS')}>
+                Contacts
+              </MCButton>
+              <MCButton onClick={() => setScreen('ABOUT_ME')}>
+                About Me
+              </MCButton>
+            </div>
           </div>
 
-          <div className="w-full flex flex-col gap-[13px]">
-            <MCButton onClick={() => setScreen('PROJECT_LIST')}>
-              Project List
-            </MCButton>
-            <MCButton onClick={() => setScreen('CONTACTS')}>
-              Contacts
-            </MCButton>
-            <MCButton onClick={() => setScreen('ABOUT_ME')}>
-              About Me
-            </MCButton>
+          <div className="flex items-center justify-center gap-1.5 pointer-events-auto">
+            <button
+              className="mc-button-bg w-[60px] flex-none relative cursor-pointer flex items-center justify-center"
+              title="Language"
+              onClick={playClick}
+            >
+              <img src={languageIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
+            </button>
+            <div className="w-[518px] max-w-[85vw] flex gap-1.5">
+              <MCButton className="flex-1" onClick={openOptions}>
+                Options...
+              </MCButton>
+              <MCButton className="flex-1" onClick={() => window.location.href = 'https://github.com/aaronmfs/aaronmfs.github.io'}>
+                Quit Web
+              </MCButton>
+            </div>
+            <button
+              className="mc-button-bg w-[60px] flex-none relative cursor-pointer flex items-center justify-center"
+              title="Accessibility"
+              onClick={() => { playClick(); openAccessibility(); }}
+            >
+              <img src={accessibilityIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
+            </button>
           </div>
-        </div>
 
-        <div className="flex items-center justify-center gap-1.5 pointer-events-auto">
-          <button
-            className="mc-button-bg w-[60px] flex-none relative cursor-pointer flex items-center justify-center"
-            title="Language"
-            onClick={playClick}
-          >
-            <img src={languageIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
-          </button>
-          <div className="w-[518px] max-w-[85vw] flex gap-1.5">
-            <MCButton className="flex-1" onClick={openOptions}>
-              Options...
-            </MCButton>
-            <MCButton className="flex-1" onClick={() => window.location.href = 'https://github.com/aaronmfs/aaronmfs.github.io'}>
-              Quit Web
-            </MCButton>
+          <div className="absolute bottom-2 left-4 text-[1rem] text-white pointer-events-none mc-text-shadow">
+            {loggedInUser ? `${loggedInUser.fullName} (logged in as)` : 'Aaron Mathew F. Sinay'}
           </div>
-          <button
-            className="mc-button-bg w-[60px] flex-none relative cursor-pointer flex items-center justify-center"
-            title="Accessibility"
-            onClick={() => { playClick(); openAccessibility(); }}
-          >
-            <img src={accessibilityIcon} alt="" className="w-[30px] h-[30px]" draggable={false} />
-          </button>
-        </div>
-
-        <div className="fixed bottom-2 left-4 text-[1rem] text-white z-20 pointer-events-none mc-text-shadow">
-          Aaron Mathew F. Sinay
-        </div>
-        <div className="fixed bottom-2 right-4 text-[1rem] text-white z-20 pointer-events-none mc-text-shadow">
-          Integrative Programming and Technologies
+          <div className="absolute bottom-2 right-4 text-[1rem] text-white pointer-events-none mc-text-shadow">
+            Integrative Programming and Technologies
+          </div>
         </div>
       </div>
 
@@ -114,6 +155,18 @@ export default function MainMenu() {
                   Reset Projects to Default
                 </MCButton>
               </div>
+
+              {loggedInUser && (
+                <div className="flex flex-col gap-1">
+                  <span className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Account</span>
+                  <div className="text-sm text-[#cccccc] tracking-wide mc-text-shadow leading-relaxed bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2">
+                    Logged in as <span className="text-white">{loggedInUser.username}</span>
+                  </div>
+                  <MCButton onClick={handleLogout}>
+                    Log Out
+                  </MCButton>
+                </div>
+              )}
             </div>
 
             <div className="flex gap-1.5 w-full mt-2">
@@ -173,6 +226,50 @@ export default function MainMenu() {
             <div className="flex gap-1.5 w-full mt-2">
               <MCButton className="flex-1" onClick={closeAccessibility}>
                 Done
+              </MCButton>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showLogin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 pointer-events-auto">
+          <div className="w-[26.25rem] max-w-[92vw] bg-[#1a1a1c] border-2 border-[#3a3a3a] rounded-sm p-6 flex flex-col gap-4">
+            <h2 className="font-minecraft text-[1.25rem] font-bold tracking-wider text-[#e0e0e0] mc-text-shadow text-center whitespace-nowrap">
+              Login
+            </h2>
+
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Username</label>
+                <input
+                  type="text"
+                  value={loginUsername}
+                  onChange={(e) => { setLoginUsername(e.target.value); setLoginError(''); }}
+                  className="bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2 text-sm text-[#e0e0e0] tracking-wide outline-none focus:border-[#6a6a6a]"
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-sm text-[#aaaaaa] tracking-wide mc-text-shadow leading-tight">Password</label>
+                <input
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => { setLoginPassword(e.target.value); setLoginError(''); }}
+                  className="bg-[#0a0a0c] border border-[#3a3a3a] rounded-sm px-3 py-2 text-sm text-[#e0e0e0] tracking-wide outline-none focus:border-[#6a6a6a]"
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleLogin(); }}
+                />
+              </div>
+
+              {loginError && (
+                <p className="text-sm text-[#ff6b6b] tracking-wide mc-text-shadow text-center">{loginError}</p>
+              )}
+            </div>
+
+            <div className="flex gap-1.5 w-full mt-2">
+              <MCButton className="flex-1" onClick={handleLogin}>
+                Login
               </MCButton>
             </div>
           </div>
