@@ -9,7 +9,7 @@ export interface ProjectEntry {
 export const INITIAL_PROJECTS: ProjectEntry[] = [
   { id: 'proj-001', title: 'Discrete Event Simulation',           summary: 'Discrete-event simulation of a Mang Inasal restaurant branch, built with Python and SimPy.',         languages: ['Python', 'JavaScript', 'CSS3', 'HTML5'], url: 'https://github.com/aaronmfs/mang-inasal-des-simulation' },
   { id: 'proj-002', title: 'Dynamic Minecraft Server with Docker',           summary: 'Minecraft server with one command, while automatically backing up your world on every start.',         languages: ['Bash', 'Docker'], url: 'https://github.com/aaronmfs/mc-server-deployer' },
-  { id: 'proj-003', title: 'Cortex',           summary: 'Personal Bash shell configuration framework and AI-assisted development environment toolkit, designed for Nobara KDE + Ghostty.',         languages: ['Bash', 'Docker'], url: 'https://github.com/aaronmfs/mc-server-deployer' },
+  { id: 'proj-003', title: 'Cortex',           summary: 'Personal Bash shell configuration framework and development environment toolkit, designed for Nobara KDE + Ghostty.',         languages: ['Bash', 'Docker'], url: 'https://github.com/aaronmfs/mc-server-deployer' },
 ];
 
 export const LANG_COLORS: Record<string, string> = {

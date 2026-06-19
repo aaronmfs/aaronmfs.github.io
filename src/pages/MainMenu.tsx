@@ -110,7 +110,7 @@ export default function MainMenu() {
                 Options...
               </MCButton>
               <MCButton className="flex-1" onClick={() => window.location.href = 'https://github.com/aaronmfs/aaronmfs.github.io'}>
-                Quit Web
+                Goto Source
               </MCButton>
             </div>
             <button
